@@ -1,109 +1,31 @@
-const seatsData = [
-    { name: "A1", price: 250, booked: false },
-    { name: "A2", price: 250, booked: false },
-    { name: "A3", price: 250, booked: false},  // Booked
-    { name: "A4", price: 250, booked: false },
-    { name: "B1", price: 200, booked: false },
-    { name: "B2", price: 200, booked: false},  // Booked
-    { name: "B3", price: 200, booked: false },
-    { name: "B4", price: 200, booked: false },
-    { name: "C1", price: 180, booked: false },
-    { name: "C2", price: 180, booked: false },  // Booked
-    { name: "C3", price: 180, booked: false },
-    { name: "C4", price: 180, booked: false },
-    { name: "D1", price: 150, booked: false },
-    { name: "D2", price: 150, booked: false },
-    { name: "D3", price: 150, booked: false },
-    { name: "D4", price: 150, bookeed:false },
-    { name: "E1", price: 120, booked: false },
-    { name: "E2", price: 120, booked: false },
-    { name: "E3", price: 120, booked: false },
-    { name: "E4", price: 120, booked: false },
-];
+// script.js
 
-const seatsContainer = document.getElementById('seats');
-const selectedSeatsContainer = document.getElementById('selected-seats');
-const totalPriceElement = document.getElementById('total-price');
-const bookButton = document.getElementById('book-button');
-const availableCountElement = document.getElementById('available-count');
-const bookedCountElement = document.getElementById('booked-count');
+document.addEventListener('DOMContentLoaded', function () {
+    const alertButton = document.getElementById('alertButton');
+    const contactForm = document.getElementById('contactForm');
 
-let selectedSeats = [];
-let totalPrice = 0;
-
-function renderSeats() {
-    seatsContainer.innerHTML = '';  // Clear previous seats
-    let availableCount = 0;
-    let bookedCount = 0;
-
-    seatsData.forEach(seat => {
-        const seatDiv = document.createElement('div');
-        seatDiv.classList.add('seat', seat.booked ? 'booked' : 'available');
-        seatDiv.innerHTML = `${seat.name}<br>`;
-        seatDiv.dataset.name = seat.name;
-        seatDiv.dataset.price = seat.price;
-
-        if (seat.booked) {
-            bookedCount++;
-        } else {
-            availableCount++;
-            seatDiv.addEventListener('click', () => {
-                toggleSeat(seatDiv);
-            });
-        }
-
-        seatsContainer.appendChild(seatDiv);
+    // Function to show more info about projects
+    alertButton.addEventListener('click', function () {
+        alert("Here are some more details about my projects:\n\n" +
+              "1. Web Design: A fully responsive website designed to provide a great user experience.\n" +
+              "2. JavaScript Game: An interactive game that challenges players with puzzles and tasks.\n" +
+              "3. Portfolio Website: A comprehensive showcase of my skills and completed works.");
     });
 
-    availableCountElement.textContent = availableCount;
-    bookedCountElement.textContent = bookedCount;
-}
+    // Prevent default form submission and show alert
+    contactForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent form from submitting
 
-function toggleSeat(seatDiv) {
-    const seatName = seatDiv.dataset.name;
-    const seatPrice = Number(seatDiv.dataset.price);
+        // Gather input values
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
 
-    if (seatDiv.classList.contains('selected')) {
-        seatDiv.classList.remove('selected');
-        selectedSeats = selectedSeats.filter(seat => seat.name !== seatName);
-        totalPrice -= seatPrice;
-    } else {
-        seatDiv.classList.add('selected');
-        selectedSeats.push({ name: seatName, price: seatPrice });
-        totalPrice += seatPrice;
-    }
+        // Display confirmation alert
+        alert(`Thank you, ${name}! Your message has been sent.\n\n` +
+              `Email: ${email}\nMessage: ${message}`);
 
-    updateSummary();
-}
-
-function updateSummary() {
-    selectedSeatsContainer.innerHTML = '';
-    selectedSeats.forEach(seat => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${seat.name} - $${seat.price}`;
-        selectedSeatsContainer.appendChild(listItem);
+        // Optionally, clear the form after submission
+        contactForm.reset();
     });
-
-    totalPriceElement.textContent = totalPrice;
-    bookButton.disabled = selectedSeats.length === 0;  // Enable/disable the booking button
-}
-
-function bookSeats() {
-    selectedSeats.forEach(seat => {
-        const seatData = seatsData.find(s => s.name === seat.name);
-        if (seatData) {
-            seatData.booked = true;  // Mark as booked
-        }
-    });
-    
-    selectedSeats = [];  // Clear selected seats
-    totalPrice = 0;      // Reset total price
-    updateSummary();
-    renderSeats();       // Re-render seats
-}
-
-// Attach event listener to the booking button
-bookButton.addEventListener('click', bookSeats);
-
-// Initial render of seats
-renderSeats();
+});
